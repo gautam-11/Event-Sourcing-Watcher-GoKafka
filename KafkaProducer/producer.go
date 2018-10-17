@@ -10,10 +10,9 @@ import (
 
 const (
 	kafkaConn = "127.0.0.1:9092"
-	topic     = "Stocks"
 )
 
-func Produce(msg string) {
+func Produce(msg string, topic string) {
 	// create producer
 	producer, err := initProducer()
 	if err != nil {
@@ -21,7 +20,7 @@ func Produce(msg string) {
 		os.Exit(1)
 	}
 	// publish without goroutene
-	publish(msg, producer)
+	publish(msg, producer, topic)
 
 	// publish with go routene
 	// go publish(msg, producer)
@@ -46,7 +45,7 @@ func initProducer() (sarama.SyncProducer, error) {
 	return prd, err
 }
 
-func publish(message string, producer sarama.SyncProducer) {
+func publish(message string, producer sarama.SyncProducer, topic string) {
 	// publish sync
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
@@ -65,3 +64,4 @@ func publish(message string, producer sarama.SyncProducer) {
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)
 }
+

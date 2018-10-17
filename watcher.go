@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"golang-watcher/Utils"
+	"golang-kafka-mongodb-watcher/Utils"
 
 	"github.com/radovskyb/watcher"
 )
@@ -36,8 +36,8 @@ func main() {
 					go Utils.ReadDoc(event.Path)
 				} else if strings.HasSuffix(event.Path, "pdf") {
 					go Utils.ReadPdf(event.Path)
-				} else {
-					fmt.Println("Format not supported yet")
+				} else if strings.HasSuffix(event.Path, "xlsx") {
+					go Utils.ReadXlsx(event.Path)
 				}
 
 				//fmt.Printf("The event is -> %s", event.Path) // Print the event's info.
@@ -50,12 +50,12 @@ func main() {
 		}
 	}()
 	// Watch this folder for changes.
-	if err := w.Add("."); err != nil {
-		log.Fatalln(err)
-	}
+	//  if err := w.Add("."); err != nil {
+	//  	log.Fatalln(err)
+	//  }
 
 	// Watch test_folder recursively for changes.
-	if err := w.AddRecursive("/home/test/Desktop"); err != nil {
+	if err := w.AddRecursive("/home/test/Desktop/LZ"); err != nil {
 		log.Fatalln(err)
 	}
 

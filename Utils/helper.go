@@ -6,14 +6,14 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 
-	"golang-watcher/KafkaProducer"
+	"golang-kafka-mongodb-watcher/KafkaProducer"
 
 	"github.com/guylaor/goword"
 	"github.com/ledongthuc/pdf"
+	"github.com/tealeg/xlsx"
 )
 
 //Logic for parsing CSV file which will be run as a goroutine
@@ -43,9 +43,8 @@ func ReadCsv(path string) {
 		fmt.Println("Record", lineCount, "is", record, "and has", len(record), "fields")
 		// and we can iterate on top of that
 		for i := 0; i < len(record); i++ {
-			KafkaProducer.Produce(record[i])
+			KafkaProducer.Produce(record[i], "csv")
 		}
-		fmt.Println()
 		lineCount += 1
 	}
 }
@@ -60,10 +59,15 @@ func ReadTxt(path string) {
 	}
 	// automatically call Close() at the end of current method
 	defer file.Close()
-	reader := bufio.NewReader(file)
-	content, _ := ioutil.ReadAll(reader)
 
-	fmt.Println(string(content))
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		KafkaProducer.Produce(string(scanner.Text()), "txt")
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
 
 }
 
@@ -82,7 +86,8 @@ func ReadPdf(path string) {
 	//fmt.Println("Reading pdf ..........")
 	content, err := readPdfUtil(path) // Read local pdf file
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 	fmt.Println(content)
 }
@@ -101,4 +106,27 @@ func readPdfUtil(path string) (string, error) {
 	}
 	buf.ReadFrom(b)
 	return buf.String(), nil
+}
+
+func ReadXlsx(path string) {
+
+	xlFile, err := xlsx.OpenFile(path)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	for _, sheet := range xlFile.Sheets {
+		for _, row := range sheet.Rows {
+			var buffer bytes.Buffer
+			for _, cell := range row.Cells {
+				buffer.WriteString(cell.String())
+				buffer.WriteString(" ")
+			}
+			KafkaProducer.Produce(buffer.String(), "xlsx")
+
+			buffer.Reset()
+
+		}
+	}
+
 }
