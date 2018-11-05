@@ -41,7 +41,7 @@ func main() {
 				}
 
 				//fmt.Printf("The event is -> %s", event.Path) // Print the event's info.
-				fmt.Println()
+				//fmt.Println()
 			case err := <-w.Error:
 				log.Fatalln(err)
 			case <-w.Closed:

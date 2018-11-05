@@ -2,16 +2,14 @@ package KafkaProducer
 
 import (
 	"fmt"
+	"golang-kafka-mongodb-watcher/internal/config"
 	"log"
 	"os"
 
 	"github.com/Shopify/sarama"
 )
 
-const (
-	kafkaConn = "127.0.0.1:9092"
-)
-
+//Produce : Producer function to produce messages to kafka
 func Produce(msg string, topic string) {
 	// create producer
 	producer, err := initProducer()
@@ -28,19 +26,26 @@ func Produce(msg string, topic string) {
 
 func initProducer() (sarama.SyncProducer, error) {
 	// setup sarama log to stdout
-	sarama.Logger = log.New(os.Stdout, "", log.Ltime)
+	//sarama.Logger = log.New(os.Stdout, "", log.Ltime)
 
 	// producer config
-	config := sarama.NewConfig()
-	config.Producer.Retry.Max = 5
-	config.Producer.RequiredAcks = sarama.WaitForAll
-	config.Producer.Return.Successes = true
+	configs := sarama.NewConfig()
+	configs.Producer.Retry.Max = 5
+	configs.Producer.RequiredAcks = sarama.WaitForAll
+	configs.Producer.Return.Successes = true
+
+	configuration, err := config.GetEnv()
+	if err != nil {
+		log.Println("Error in reading Kafka connection string")
+	}
+
+	kafkaConn := configuration.Constants.KAFKA_CONN
 
 	// async producer
 	//prd, err := sarama.NewAsyncProducer([]string{kafkaConn}, config)
 
 	// sync producer
-	prd, err := sarama.NewSyncProducer([]string{kafkaConn}, config)
+	prd, err := sarama.NewSyncProducer([]string{kafkaConn}, configs)
 
 	return prd, err
 }
@@ -64,4 +69,3 @@ func publish(message string, producer sarama.SyncProducer, topic string) {
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)
 }
-

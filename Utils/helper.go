@@ -16,7 +16,7 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-//Logic for parsing CSV file which will be run as a goroutine
+//ReadCsv : Logic for parsing CSV file which will be run as a goroutine
 func ReadCsv(path string) {
 
 	//fmt.Println("Reading CSV.....")
@@ -49,7 +49,7 @@ func ReadCsv(path string) {
 	}
 }
 
-//Logic for parsing text file which will be run as a goroutine
+//ReadTxt : Logic for parsing text file which will be run as a goroutine
 func ReadTxt(path string) {
 	//fmt.Println("Reading txt......")
 	file, err := os.Open(path)
@@ -71,17 +71,17 @@ func ReadTxt(path string) {
 
 }
 
-//Logic for parsing docx file which will be run as a goroutine
+//ReadDoc : Logic for parsing docx file which will be run as a goroutine
 func ReadDoc(path string) {
 	//fmt.Println("Reading Docx.....")
 	text, err := goword.ParseText(path)
 	if err != nil {
-		log.Panic(err)
+		fmt.Println(err)
 	}
 	fmt.Printf("%s ", text)
 }
 
-//Logic for parsing pdf file which will be run as a goroutine
+//ReadPdf : Logic for parsing pdf file which will be run as a goroutine
 func ReadPdf(path string) {
 	//fmt.Println("Reading pdf ..........")
 	content, err := readPdfUtil(path) // Read local pdf file
@@ -108,6 +108,7 @@ func readPdfUtil(path string) (string, error) {
 	return buf.String(), nil
 }
 
+//ReadXlsx: Logic for parsing xlsx file which will be run as a goroutine
 func ReadXlsx(path string) {
 
 	xlFile, err := xlsx.OpenFile(path)
