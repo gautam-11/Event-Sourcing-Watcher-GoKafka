@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"golang-kafka-mongodb-watcher/Utils"
+	"Event-Sourcing-Watcher-GoKafka/Utils"
 
 	"github.com/radovskyb/watcher"
 )

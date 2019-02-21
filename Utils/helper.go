@@ -1,11 +1,11 @@
 package Utils
 
 import (
+	"Event-Sourcing-Watcher-GoKafka/KafkaProducer"
 	"bufio"
 	"bytes"
 	"encoding/csv"
 	"fmt"
-	"golang-kafka-mongodb-watcher/KafkaProducer"
 	"io"
 	"log"
 	"os"

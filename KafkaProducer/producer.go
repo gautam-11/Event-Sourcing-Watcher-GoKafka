@@ -1,8 +1,8 @@
 package KafkaProducer
 
 import (
+	"Event-Sourcing-Watcher-GoKafka/internal/config"
 	"fmt"
-	"golang-kafka-mongodb-watcher/internal/config"
 	"log"
 	"os"
 
