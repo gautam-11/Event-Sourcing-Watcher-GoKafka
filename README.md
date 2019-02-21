@@ -19,4 +19,4 @@
     #### docker run --rm ches/kafka kafka-console-consumer.sh --topic xlsx --zookeeper 172.17.0.1:2181 <br />
 5. go build .   <br />
 6. go run watcher.go  <br />
-7. Drop the files in landing zone  <br />
+7. Drop the files in the landing zone(file directory you specify in watcher.go)  <br />
