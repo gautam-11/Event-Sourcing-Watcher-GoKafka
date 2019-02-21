@@ -1,4 +1,4 @@
-# Event-Sourcing-Watcher using golang and kafka
+## Event-Sourcing-Watcher using golang and kafka
 
 #### A watcher file written in golang following the event-driven-architecture that watches for new events in a file directory like creation of files and produces their content to kafka for storage .Later consumers subscribed to a specific topic can fetch data from kafka and store into mongodb/cassandra.
 
